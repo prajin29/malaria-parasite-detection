@@ -1,4 +1,4 @@
-# 🦠 Malaria Parasite Detection Using EfficientNetB0
+# Malaria Parasite Detection Using EfficientNetB0
 
 This project uses transfer learning with EfficientNetB0 to detect malaria from thin blood smear images.
 
