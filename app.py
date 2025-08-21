@@ -75,9 +75,55 @@ def load_model():
             st.info("Please ensure your model file is in the same folder as this app")
             return None
         
+        # Check file size to ensure it's not empty
+        file_size = os.path.getsize('malaria_detector_model.h5')
+        if file_size < 1000:  # Less than 1KB
+            st.error("❌ Model file appears to be empty or corrupted")
+            st.info(f"File size: {file_size} bytes (should be much larger)")
+            return None
+        
+        st.info(f"📁 Model file found: {file_size / (1024*1024):.2f} MB")
+        
         # Try to load the model
         st.info("🔄 Loading malaria detection model...")
-        model = tf.keras.models.load_model('malaria_detector_model.h5')
+        
+        try:
+            # First try: Standard model loading
+            model = tf.keras.models.load_model('malaria_detector_model.h5')
+        except Exception as e1:
+            st.warning("⚠️ Standard loading failed, trying alternative methods...")
+            
+            try:
+                # Second try: Load with custom_objects
+                model = tf.keras.models.load_model('malaria_detector_model.h5', compile=False)
+            except Exception as e2:
+                st.warning("⚠️ Alternative loading failed, trying to load weights only...")
+                
+                try:
+                    # Third try: Load just the architecture and weights separately
+                    from tensorflow.keras.applications import EfficientNetB0
+                    from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
+                    from tensorflow.keras.models import Model
+                    
+                    # Create the model architecture
+                    base_model = EfficientNetB0(weights=None, include_top=False, input_shape=(224, 224, 3))
+                    x = base_model.output
+                    x = GlobalAveragePooling2D()(x)
+                    x = Dense(128, activation='relu')(x)
+                    predictions = Dense(2, activation='softmax')(x)
+                    model = Model(inputs=base_model.input, outputs=predictions)
+                    
+                    # Try to load weights
+                    model.load_weights('malaria_detector_model.h5')
+                    st.success("✅ Model loaded using architecture reconstruction method")
+                    
+                except Exception as e3:
+                    st.error("❌ All loading methods failed")
+                    st.error(f"Error 1 (standard): {str(e1)}")
+                    st.error(f"Error 2 (compile=False): {str(e2)}")
+                    st.error(f"Error 3 (architecture): {str(e3)}")
+                    st.error("Your model file may be corrupted or incompatible")
+                    return None
         
         # Check model input/output shapes
         input_shape = model.input_shape
