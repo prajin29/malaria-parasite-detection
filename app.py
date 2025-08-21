@@ -70,14 +70,14 @@ def load_model():
     """Load the malaria detection model"""
     try:
         # Check if model file exists
-        if not os.path.exists('malaria_model.h5'):
-            st.error("❌ Model file 'malaria_model.h5' not found in current directory")
+        if not os.path.exists('malaria_detector_model.h5'):
+            st.error("❌ Model file 'malaria_detector_model.h5' not found in current directory")
             st.info("Please ensure your model file is in the same folder as this app")
             return None
         
         # Try to load the model
         st.info("🔄 Loading malaria detection model...")
-        model = tf.keras.models.load_model('malaria_model.h5')
+        model = tf.keras.models.load_model('malaria_detector_model.h5')
         
         # Check model input/output shapes
         input_shape = model.input_shape
