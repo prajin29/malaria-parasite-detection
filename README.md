@@ -83,12 +83,12 @@ malaria-parasite-detection/
 
 ## 🔧 **Requirements**
 - Python 3.8+
-- TensorFlow 2.15.0
+- TensorFlow 2.20.0+
 - Streamlit 1.28.0+
 - OpenCV
 - Pillow
-- NumPy 1.24.3
-- Pandas 2.0.3
+- NumPy 1.24.0+
+- Pandas 2.0.0+
 
 ## 🎯 **Future Work**
 * ✅ Add Streamlit deployment
