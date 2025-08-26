@@ -2,6 +2,10 @@
 
 This project uses transfer learning with EfficientNetB0 to detect malaria from thin blood smear images.
 
+## Try the deployed app here..
+
+* https://malaria-parasite-detection-model.streamlit.app/
+
 ## 📁 Dataset
 
 * Cell Images for Malaria Detection
